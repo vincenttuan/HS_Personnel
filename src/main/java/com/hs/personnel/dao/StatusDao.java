@@ -9,16 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StatusDao {
-    private static Connection conn;
-
-    public StatusDao() throws Exception {
-        String url = "jdbc:derby://localhost:1527/HS";
-        String user = "app";
-        String password = "1234";
-        conn = DriverManager.getConnection(url, user, password);
-        System.out.println(!conn.isClosed());
-    }
+public class StatusDao extends BaseDao {
     
     public List<Map<String, String>> query() {
         List<Map<String, String>> list = new ArrayList<>();

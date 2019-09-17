@@ -9,6 +9,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
 import com.hs.personnel.dao.ClockOnDao;
+import com.hs.personnel.dao.EmployeeDao;
 import com.hs.personnel.dao.StatusDao;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
@@ -37,14 +38,12 @@ public class PersonnelJFrame extends javax.swing.JFrame {
 
     ClockOnDao dao;
     StatusDao statusDao;
-
+    EmployeeDao employeeDao;
     // init block
     {
-        try {
-            dao = new ClockOnDao();
-            statusDao = new StatusDao();
-        } catch (Exception ex) {
-        }
+        dao = new ClockOnDao();
+        statusDao = new StatusDao();
+        employeeDao = new EmployeeDao();
     }
 
     class ClockOnArgs {
@@ -167,22 +166,16 @@ public class PersonnelJFrame extends javax.swing.JFrame {
                 // 顯示所傳來的資料
                 @Override
                 public void setData(String data) {
-                    data = data.replaceAll("\n", "");
-                    System.out.println(data);
-                    if(data.contains("00 03 40 D5")) {
-                        edit_emp_no.setText("0011");
-                        takePicture();
+                    // rfid 資料 = data 去除 enter 字元
+                    String rfid = data.replaceAll("\n", "").trim();
+                    // 根據 rfid 取得 emp_no
+                    String emp_no = employeeDao.getEmpNo(rfid);
+                    // 顯示 emp_no 資料
+                    edit_emp_no.setText(emp_no);
+                    System.out.println(rfid);
+                    // 進行打卡
+                    if(emp_no != null && !emp_no.trim().equals("")) {
                         clockOn();
-                    } else if(data.contains("D0 03 43 D5")) {
-                        edit_emp_no.setText("1001");
-                        takePicture();
-                        clockOn();
-                    } else if(data.contains("26 9F 12 3B")) {
-                        edit_emp_no.setText("1002");
-                        takePicture();
-                        clockOn();
-                    } else {
-                        edit_emp_no.setText("");
                     }
                 }
             };
@@ -199,7 +192,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         initWebcam();
         // 預設時段
         defaultClockOn();
-        // rfid
+        // rfid 偵測
         rfid();
     }
 
@@ -404,12 +397,14 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         //setTitle(evt.getKeyCode() + "");
         // 使用者按下 enter 鍵 -> 進行快照 + 打卡程序
         if (evt.getKeyCode() == 10) {
-            takePicture();
             clockOn();
         }
     }//GEN-LAST:event_edit_emp_noKeyPressed
-
+    
+    // 打卡方法
     private void clockOn() {
+        // 照片快照
+        takePicture();
         // 員工編號
         clockOnArgs.emp_no = edit_emp_no.getText();
         // 打卡時間

@@ -34,6 +34,9 @@ ALTER TABLE APP.CLOCKON ADD COLUMN image CLOB;
 ALTER TABLE APP.Status ADD status_begin int;
 ALTER TABLE APP.Status ADD status_end int;
 
+-- 在 Employee 中增加 rfid 卡號欄位
+ALTER TABLE APP.Employee ADD emp_rfid varchar(50);
+
 -- 根據 EMP_NO 與 指定打卡日期 查找打卡資料
 Select e.emp_no, e.emp_name, s.status_name, c.clock_on, c.image
 From employee e, status s, clockon c

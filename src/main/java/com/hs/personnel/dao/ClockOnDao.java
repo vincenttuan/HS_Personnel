@@ -10,18 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClockOnDao {
-
-    private static Connection conn;
-
-    public ClockOnDao() throws Exception {
-        String url = "jdbc:derby://localhost:1527/HS";
-        String user = "app";
-        String password = "1234";
-        conn = DriverManager.getConnection(url, user, password);
-        System.out.println(!conn.isClosed());
-    }
-
+public class ClockOnDao extends BaseDao {
+    
     public int add(String emp_no, String status_name, String image) {
         // 檢查參數
         int emp_id = getEmpId(emp_no);    // 從 emp_no 反查 emp_id , 例如 : 0011 -> 1
