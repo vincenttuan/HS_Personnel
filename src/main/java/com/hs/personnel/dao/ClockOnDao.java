@@ -40,6 +40,22 @@ public class ClockOnDao extends BaseDao {
         
     }
     
+    // 取得 Image
+    public String getImage(int clock_id) {
+        try {
+            String sql = "Select image From clockon Where clock_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, clock_id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("image");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     // 取得 emp_id
     public int getEmpId(String emp_no) {
         try {
@@ -74,12 +90,17 @@ public class ClockOnDao extends BaseDao {
     
     // Query
     public List<Map<String, String>> queryToday(String emp_no) {
-        String today_begin = LocalDate.now().toString() + " 00:00:00"; // ex: 2019-08-22 00:00:00
-        String today_end   = LocalDate.now().toString() + " 23:59:59"; // ex: 2019-08-22 23:59:59
+        String today = LocalDate.now().toString();
+        return query(emp_no, today, today);
+    }
+    
+    public List<Map<String, String>> query(String emp_no, String begin, String end) {
+        String today_begin = begin.toString() + " 00:00:00"; // ex: 2019-08-22 00:00:00
+        String today_end   = end.toString() + " 23:59:59"; // ex: 2019-08-22 23:59:59
         List<Map<String, String>> list = new ArrayList<>();
         // 查詢資料表
         try {
-            String sql = "SELECT e.EMP_NO, e.EMP_NAME, s.STATUS_NAME, c.CLOCK_ON, c.IMAGE\n" +
+            String sql = "SELECT c.CLOCK_ID, e.EMP_NO, e.EMP_NAME, s.STATUS_NAME, c.CLOCK_ON, c.IMAGE\n" +
                          "FROM employee e, clockon c, status s\n" +
                          "WHERE e.EMP_NO = ? \n" +
                          "and c.EMP_ID = e.EMP_ID \n" +
@@ -94,6 +115,7 @@ public class ClockOnDao extends BaseDao {
             
             while (rs.next()) {
                 Map<String, String> map = new LinkedHashMap<>();
+                map.put("clock_id", rs.getString("clock_id"));
                 map.put("emp_no", rs.getString("emp_no"));
                 map.put("emp_name", rs.getString("emp_name"));
                 map.put("status_name", rs.getString("status_name"));
