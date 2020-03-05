@@ -8,6 +8,8 @@ package com.hs.personnel;
 import com.hs.personnel.dao.ClockOnDao;
 import com.hs.personnel.dao.EmployeeDao;
 import java.awt.image.BufferedImage;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -118,6 +120,11 @@ public class ReportJFrame extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jButton2.setText("匯出");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jtable_emp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -273,6 +280,44 @@ public class ReportJFrame extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jtable_clockonMouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        DefaultTableModel dm = (DefaultTableModel) jtable_emp.getModel();
+        int row = jtable_emp.getSelectedRow();
+        int col = 0;
+        String emp_no = dm.getValueAt(row, col).toString();
+        String begin = edit_begin.getText();
+        String end = edit_end.getText();
+        List<Map<String, String>> list = clockOnDao.query(emp_no, begin, end);
+        if (list.size() == 0) return;
+        try {
+            String headers = "";
+            for(String header : list.get(0).keySet()) {
+                if (!header.equals("image")) {
+                    headers += header + ", ";
+                }
+            }
+            String contents = "";
+            for(Map<String, String> map : list) {
+                for(String key : list.get(0).keySet()) {
+                    if (!key.equals("image")) {
+                        contents += map.get(key) + ", ";
+                    }
+                }
+                contents += "\n";
+            }
+            
+            String report = headers + "\n" + contents;
+            
+            Files.write(Paths.get("打卡資料.csv"), report.getBytes());
+            
+            System.out.println("Write OK !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -110,9 +110,9 @@ public class PersonnelJFrame extends javax.swing.JFrame {
     // 顯示 Webcam
     private void showWebcam(int index, JPanel jPanelWebcam) {
 
-        //webcam = Webcam.getDefault();
+        webcam = Webcam.getDefault();
         // 透過 i 值來找到 webcam 的名字用以決定要顯示的 webcam
-        webcam = Webcam.getWebcamByName(Webcam.getWebcams().get(index).getName());
+        //webcam = Webcam.getWebcamByName(Webcam.getWebcams().get(index).getName());
 
         webcam.setViewSize(WebcamResolution.QVGA.getSize());
 
@@ -129,6 +129,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
 
     // 快照
     private void takePicture() {
+        if (webcam == null) return;
         if (!webcam.isOpen()) {
             webcam.open();
         }

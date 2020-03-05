@@ -9,9 +9,9 @@ public class BaseDao {
     public BaseDao() {
         if(conn == null) {
             try {
-                String url = "jdbc:derby://localhost:1527/HS";
+                String url = "jdbc:derby://localhost:1527/HSDB";
                 String user = "app";
-                String password = "1234";
+                String password = "app";
                 conn = DriverManager.getConnection(url, user, password);
                 System.out.println(!conn.isClosed());
             } catch (Exception e) {
