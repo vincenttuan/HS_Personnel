@@ -10,7 +10,7 @@ public class BaseDao {
         if(conn == null) {
             try {
                 String url = "jdbc:derby://localhost:1527/HSDB";
-                //String url = "jdbc:derby:/Users/vincenttuan/Documents/Derby/databases/HSDB";
+                //String url = "jdbc:derby:file:////Users/vincenttuan/Documents/Derby/databases/HSDB";
                 String user = "app";
                 String password = "app";
                 conn = DriverManager.getConnection(url, user, password);
