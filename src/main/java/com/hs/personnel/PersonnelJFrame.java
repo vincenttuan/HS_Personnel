@@ -12,6 +12,8 @@ import com.hs.personnel.dao.ClockOnDao;
 import com.hs.personnel.dao.EmployeeDao;
 import com.hs.personnel.dao.StatusDao;
 import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -23,6 +25,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -39,6 +42,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
     ClockOnDao dao;
     StatusDao statusDao;
     EmployeeDao employeeDao;
+
     // init block
     {
         dao = new ClockOnDao();
@@ -129,7 +133,9 @@ public class PersonnelJFrame extends javax.swing.JFrame {
 
     // 快照
     private void takePicture() {
-        if (webcam == null) return;
+        if (webcam == null) {
+            return;
+        }
         if (!webcam.isOpen()) {
             webcam.open();
         }
@@ -154,9 +160,9 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         System.out.println(list);
         System.out.println(LocalDateTime.now().getHour());
 
-        btn_status_4.setBackground(Color.red);
-        btn_status_4.setForeground(Color.yellow);
-        clockOnArgs.status_name = btn_status_4.getText();
+        btn_status_1.setBackground(Color.red);
+        btn_status_1.setForeground(Color.yellow);
+        clockOnArgs.status_name = btn_status_1.getText();
 
     }
 
@@ -175,7 +181,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
                     edit_emp_no.setText(emp_no);
                     System.out.println(rfid);
                     // 進行打卡
-                    if(emp_no != null && !emp_no.trim().equals("")) {
+                    if (emp_no != null && !emp_no.trim().equals("")) {
                         clockOn();
                     }
                 }
@@ -195,6 +201,22 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         defaultClockOn();
         // rfid 偵測
         rfid();
+        // 各種事件註冊
+        setListener();
+    }
+
+    private void setListener() {
+        btn_status_1.setFocusable(false);
+        btn_status_2.setFocusable(false);
+        btn_status_3.setFocusable(false);
+        btn_status_4.setFocusable(false);
+        clickOnJTable.setFocusable(false);
+        
+        addWindowListener(new WindowAdapter() {
+            public void windowOpened(WindowEvent e) {
+                edit_emp_no.requestFocus();
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -294,30 +316,29 @@ public class PersonnelJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btn_status_1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btn_status_2))
+                            .addComponent(edit_emp_no, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btn_status_3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btn_status_4))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(edit_emp_no))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(edit_clock_on))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                        .addComponent(edit_clock_on)))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -328,39 +349,34 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(edit_emp_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btn_status_1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btn_status_2))
-                                .addGap(1, 1, 1)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btn_status_3)
-                                    .addComponent(btn_status_4))
-                                .addGap(2, 2, 2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btn_status_2, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                    .addComponent(btn_status_1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btn_status_3, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                    .addComponent(btn_status_4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(13, 13, 13)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(edit_emp_no, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(edit_clock_on, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tabbedPane))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(picture, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(47, 47, 47))
         );
 
         pack();
@@ -371,6 +387,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         btn_status_1.setBackground(Color.red);
         btn_status_1.setForeground(Color.yellow);
         clockOnArgs.status_name = btn_status_1.getText();
+        
     }//GEN-LAST:event_btn_status_1ActionPerformed
 
     private void btn_status_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_status_2ActionPerformed
@@ -378,6 +395,7 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         btn_status_2.setBackground(Color.red);
         btn_status_2.setForeground(Color.yellow);
         clockOnArgs.status_name = btn_status_2.getText();
+        
     }//GEN-LAST:event_btn_status_2ActionPerformed
 
     private void btn_status_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_status_3ActionPerformed
@@ -399,9 +417,10 @@ public class PersonnelJFrame extends javax.swing.JFrame {
         // 使用者按下 enter 鍵 -> 進行快照 + 打卡程序
         if (evt.getKeyCode() == 10) {
             clockOn();
+            edit_emp_no.selectAll();
         }
     }//GEN-LAST:event_edit_emp_noKeyPressed
-    
+
     // 打卡方法
     private void clockOn() {
         // 照片快照

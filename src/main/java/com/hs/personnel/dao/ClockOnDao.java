@@ -105,7 +105,8 @@ public class ClockOnDao extends BaseDao {
                          "WHERE e.EMP_NO = ? \n" +
                          "and c.EMP_ID = e.EMP_ID \n" +
                          "and s.STATUS_ID = c.STATUS_ID\n" +
-                         "and c.CLOCK_ON between ? and ?";
+                         "and c.CLOCK_ON between ? and ? " + 
+                         "order by c.CLOCK_ON";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, emp_no);
             pstmt.setString(2, today_begin);
