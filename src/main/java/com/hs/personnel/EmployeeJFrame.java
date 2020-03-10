@@ -6,6 +6,8 @@
 package com.hs.personnel;
 
 import com.hs.personnel.dao.EmployeeDao;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
@@ -17,11 +19,21 @@ import usb.USBReader;
  * @author vincenttuan
  */
 public class EmployeeJFrame extends javax.swing.JFrame {
-
+    public static boolean opened;
     private EmployeeDao employeeDao = new EmployeeDao();
     
-    
     public EmployeeJFrame() {
+        if(opened) {
+            this.requestFocus();
+            return;
+        }
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                opened = false;
+            }
+        });
+        opened = true;
+        
         initComponents();
         rfid();
         listEmployees();
@@ -85,7 +97,7 @@ public class EmployeeJFrame extends javax.swing.JFrame {
         edit_emp_name = new javax.swing.JTextField();
         edit_emp_rfid = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Employee");
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N

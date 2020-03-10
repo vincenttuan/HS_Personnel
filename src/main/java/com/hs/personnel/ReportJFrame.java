@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.hs.personnel;
 
+import static com.hs.personnel.EmployeeJFrame.opened;
 import com.hs.personnel.dao.ClockOnDao;
 import com.hs.personnel.dao.EmployeeDao;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,17 +14,24 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import utils.ImageUtil;
 
-/**
- *
- * @author vincenttuan
- */
 public class ReportJFrame extends javax.swing.JFrame {
-
+    public static boolean opened;
+    
     private EmployeeDao employeeDao = new EmployeeDao();
 
     private ClockOnDao clockOnDao = new ClockOnDao();
 
     public ReportJFrame() {
+        if(opened) {
+            return;
+        }
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                opened = false;
+            }
+        });
+        opened = true;
+        
         initComponents();
         listEmployees();
         // 調整欄位高度/寬度
